@@ -1,0 +1,7 @@
+services:
+  mqtt-broker:
+    image: eclipse-mosquitto:latest
+    volumes:
+      - ./docker/mosquitto.conf:/mosquitto/config/mosquitto.conf
+    ports:
+      - 1883:1883

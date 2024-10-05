@@ -1,0 +1,32 @@
+{
+  "name": "mqtt-trident",
+  "version": "0.1.0",
+  "description": "An Express-like interface for managing MQTT subscriptions.",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "example": "ts-node ./src/example.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Meantub/mqtt-trident.git"
+  },
+  "keywords": [
+    "mqtt",
+    "mqtt-router",
+    "express-like",
+    "mqtt-client",
+    "iot"
+  ],
+  "author": "Kenneth Tubman",
+  "license": "MIT",
+  "dependencies": {
+    "mqtt": "^5.10.1"
+  },
+  "devDependencies": {
+    "@types/node": "^22.5.5",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.6.2"
+  }
+}
