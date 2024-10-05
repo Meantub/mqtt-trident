@@ -7,6 +7,8 @@ export type AsyncMiddlewareFunction<T = any> = (
   next: () => Promise<void>
 ) => Promise<void>;
 
+// TODO: Wrap the messages, params, and topic into a Request type
+// TODO: Create a Response type that allows you access to publish
 export type AsyncHandlerFunction<T = any> = (
   message: Buffer,
   params: { [key: string]: string } | undefined,

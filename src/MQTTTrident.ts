@@ -123,11 +123,14 @@ export default class MQTTTrident<T = any> extends EventEmitter {
     }
     this.subscriptionMap.get(topicPattern)!.add(handler);
 
-    if (this.client.connected) {
+    // TODO: Still need to cover subscriptions from higher up objects like
+    // subscribing to topic/a and topic/+ would still work but would result in
+    // 2 messages being received for any topic/a messages
+    if (this.client.connected && !this.mqttTopics.has(mqttTopic)) {
       this.client.subscribe(mqttTopic, { qos: options?.qos ?? 0 });
     }
     else {
-      this.pendingSubscriptions.push({ topicPattern, options })
+      this.pendingSubscriptions.push({ topicPattern, options });
     }
   }
 
@@ -202,20 +205,21 @@ export default class MQTTTrident<T = any> extends EventEmitter {
     obj: Record<string, any>,
     options?: IClientPublishOptions
   ) {
-    const traverseAndPublish = (currentPath: string, value: any) => {
+    const stack: Array<{ currentPath: string; value: any }> = [{ currentPath: path, value: obj }];
+
+    while (stack.length > 0) {
+      const { currentPath, value } = stack.pop()!;
       if (typeof value === 'object' && value !== null) {
         for (const key in value) {
           if (value.hasOwnProperty(key)) {
-            traverseAndPublish(`${currentPath}/${key}`, value[key]);
+            stack.push({ currentPath: `${currentPath}/${key}`, value: value[key] });
           }
         }
       } else {
         const message = typeof value === 'string' ? value : JSON.stringify(value);
         this.publish(currentPath, message, options);
       }
-    };
-
-    traverseAndPublish(path, obj);
+    }
   }
 
   // Start listening to messages
